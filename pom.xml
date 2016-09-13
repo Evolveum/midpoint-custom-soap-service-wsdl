@@ -21,7 +21,7 @@
 	<name>midPoint Custom Service</name>
 	<groupId>com.example</groupId>
 	<artifactId>midpoint-custom-service</artifactId>
-	<version>3.5-SNAPSHOT</version>
+	<version>3.4.1</version>
 	<packaging>pom</packaging>
 	<description>Example of a midPoint overlay project that implements a custom web service</description>
 
@@ -42,7 +42,7 @@
 		<project.source.version>1.7</project.source.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<midpoint.version>3.5-SNAPSHOT</midpoint.version>
+		<midpoint.version>3.4.1</midpoint.version>
 		<jaxb.version>2.2.10-b140310.1920</jaxb.version>
 		<cxf.version>3.1.6</cxf.version>
 		<cxf-xjc.version>3.0.5</cxf-xjc.version>
@@ -162,6 +162,21 @@
 
 		</dependencies>
 	</dependencyManagement>
+
+	<!-- Compatibility with older maven -->
+	<build>
+	    <plugins>
+	      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<version>3.5.1</version>
+		<configuration>
+		  <source>1.7</source>
+		  <target>1.7</target>
+		</configuration>
+	      </plugin>
+	    </plugins>
+	  </build>
 
 	<modules>
 		<module>midpoint-custom-service-server</module>
