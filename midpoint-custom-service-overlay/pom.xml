@@ -21,14 +21,14 @@
 	<name>midPoint Custom Service Overlay</name>
 	<groupId>com.example</groupId>
 	<artifactId>midpoint-custom-service-overlay</artifactId>
-	<version>3.7-SNAPSHOT</version>
+	<version>3.7</version>
 	<packaging>war</packaging>
 	<description>Example of a midPoint overlay project that implements a custom web service</description>
 
 	<parent>
 		<groupId>com.example</groupId>
 		<artifactId>midpoint-custom-service</artifactId>
-		<version>3.7-SNAPSHOT</version>
+		<version>3.7</version>
 	</parent>
 
 	<repositories>
@@ -137,14 +137,14 @@
 		<dependency>
 			<groupId>com.evolveum.midpoint.gui</groupId>
 			<artifactId>admin-gui</artifactId>
-			<version>3.7-SNAPSHOT</version>
+			<version>${midpoint.version}</version>
 			<type>war</type>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.evolveum.midpoint.gui</groupId>
 			<artifactId>admin-gui</artifactId>
-			<version>3.7-SNAPSHOT</version>
+			<version>${midpoint.version}</version>
 			<type>jar</type>
 			<classifier>classes</classifier>
 			<scope>compile</scope>
@@ -152,7 +152,7 @@
 		<dependency>
 			<groupId>com.example</groupId>
 			<artifactId>midpoint-custom-service-server</artifactId>
-			<version>3.7-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

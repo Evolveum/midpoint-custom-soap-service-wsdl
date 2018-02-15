@@ -25,7 +25,7 @@
 	<parent>
 		<groupId>com.example</groupId>
 		<artifactId>midpoint-custom-service</artifactId>
-		<version>3.7-SNAPSHOT</version>
+		<version>3.7</version>
 	</parent>
 
 	<dependencies>
@@ -99,7 +99,7 @@
 								<artifactItem>
 									<groupId>com.example</groupId>
 									<artifactId>midpoint-custom-service-server</artifactId>
-									<version>3.7-SNAPSHOT</version>
+									<version>${project.version}</version>
 									<type>jar</type>
 								</artifactItem>
 							</artifactItems>
