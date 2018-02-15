@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (c) 2014-2016 Evolveum
+  ~ Copyright (c) 2014-2018 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -39,13 +39,12 @@
 	</repositories>
 
 	<properties>
-		<project.source.version>1.7</project.source.version>
+		<project.source.version>1.8</project.source.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<midpoint.version>3.7-SNAPSHOT</midpoint.version>
-		<jaxb.version>2.2.10-b140310.1920</jaxb.version>
-		<cxf.version>3.1.6</cxf.version>
-		<cxf-xjc.version>3.0.5</cxf-xjc.version>
+		<jaxb.version>2.2.10</jaxb.version>
+		<cxf.version>3.2.1</cxf.version>
+		<cxf-xjc.version>3.2.0</cxf-xjc.version>
 		<testng.version>6.8.8</testng.version>
 	</properties>
 
@@ -82,11 +81,16 @@
 				<version>${midpoint.version}</version>
 			</dependency>
 
-
 			<dependency>
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
 				<version>2.6</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.7</version>
 			</dependency>
 
 			<dependency>
