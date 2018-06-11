@@ -43,7 +43,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<midpoint.version>3.8-SNAPSHOT</midpoint.version>
 		<jaxb.version>2.2.10</jaxb.version>
-		<cxf.version>3.2.1</cxf.version>
+		<cxf.version>3.2.4</cxf.version>
 		<cxf-xjc.version>3.2.0</cxf-xjc.version>
 		<testng.version>6.8.8</testng.version>
 	</properties>
