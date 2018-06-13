@@ -21,14 +21,14 @@
 	<name>midPoint Custom Service Overlay</name>
 	<groupId>com.example</groupId>
 	<artifactId>midpoint-custom-service-overlay</artifactId>
-	<version>3.8-SNAPSHOT</version>
+	<version>3.8</version>
 	<packaging>war</packaging>
 	<description>Example of a midPoint overlay project that implements a custom web service</description>
 
 	<parent>
 		<groupId>com.example</groupId>
 		<artifactId>midpoint-custom-service</artifactId>
-		<version>3.8-SNAPSHOT</version>
+		<version>3.8</version>
 	</parent>
 
 	<repositories>
