@@ -189,7 +189,6 @@
 
 	<modules>
 		<module>midpoint-custom-service-server</module>
-		<module>midpoint-custom-service-client</module>
 		<module>midpoint-custom-service-overlay</module>
 	</modules>
 
