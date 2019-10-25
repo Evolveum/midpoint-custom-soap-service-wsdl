@@ -21,7 +21,7 @@
 	<name>midPoint Custom Service</name>
 	<groupId>com.example</groupId>
 	<artifactId>midpoint-custom-service</artifactId>
-	<version>4.0.1</version>
+	<version>4.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Example of a midPoint overlay project that implements a custom web service</description>
 
@@ -41,7 +41,7 @@
 	<properties>
 		<project.source.version>1.8</project.source.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<midpoint.version>4.0.1</midpoint.version>
+		<midpoint.version>4.1-SNAPSHOT</midpoint.version>
 		<jaxb.version>2.3.0.1</jaxb.version>
 		<jaxb-xjc.version>2.3.0.1</jaxb-xjc.version>
 		<cxf.version>3.3.1</cxf.version>
