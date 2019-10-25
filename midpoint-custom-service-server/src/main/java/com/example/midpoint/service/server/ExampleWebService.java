@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-2016 Evolveum
+ * Copyright (c) 2014-2019 Evolveum
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,14 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import com.evolveum.midpoint.prism.*;
 import org.apache.commons.lang.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.evolveum.midpoint.model.api.ModelService;
 import com.evolveum.midpoint.model.common.util.AbstractModelWebService;
-import com.evolveum.midpoint.prism.PrismContext;
-import com.evolveum.midpoint.prism.PrismObject;
-import com.evolveum.midpoint.prism.PrismObjectDefinition;
-import com.evolveum.midpoint.prism.PrismPropertyDefinition;
-import com.evolveum.midpoint.prism.PrismPropertyValue;
-import com.evolveum.midpoint.prism.path.ItemPath;
-import com.evolveum.midpoint.prism.match.StringIgnoreCaseMatchingRule;
 import com.evolveum.midpoint.prism.query.ObjectQuery;
-import com.evolveum.midpoint.prism.query.SubstringFilter;
 import com.evolveum.midpoint.schema.result.OperationResult;
 import com.evolveum.midpoint.task.api.Task;
 import com.evolveum.midpoint.util.exception.CommonException;
@@ -64,13 +57,8 @@ public class ExampleWebService extends AbstractModelWebService implements Exampl
 
 	private static final Trace LOGGER = TraceManager.getTrace(ExampleWebService.class);
 
-	private PrismObjectDefinition<UserType> userDefinition;
-
-	@Autowired(required = true)
-	ModelService modelService;
-	
-	@Autowired(required = true)
-	PrismContext prismContext;
+	@Autowired ModelService modelService;
+	@Autowired PrismContext prismContext;
 	
 	public SearchUserByEmailResponseType searchUserByEmail(SearchUserByEmailRequestType parameters)
 			throws Fault {
@@ -87,7 +75,7 @@ public class ExampleWebService extends AbstractModelWebService implements Exampl
 		SearchUserByEmailResponseType response;
 		try {
 			List<PrismObject<UserType>> users = findUsers(UserType.F_EMAIL_ADDRESS, email,
-					StringIgnoreCaseMatchingRule.NAME, task, result);
+					PrismConstants.STRING_IGNORE_CASE_MATCHING_RULE_NAME, task, result);
 
 			response = new SearchUserByEmailResponseType();
 			for (PrismObject<UserType> user : users) {
@@ -117,18 +105,11 @@ public class ExampleWebService extends AbstractModelWebService implements Exampl
 	
 	private <T> ObjectQuery createUserSubstringQuery(QName property, QName matchingRule, T value)
 			throws SchemaException {
-		PrismPropertyDefinition<T> def = getUserDefinition().findPropertyDefinition(property);
-		SubstringFilter<T> filter = SubstringFilter.createSubstring(new ItemPath(property), def, 
-				prismContext, matchingRule, new PrismPropertyValue<T>(value), true, false);
-		return ObjectQuery.createObjectQuery(filter);
-	}
-	
-	private PrismObjectDefinition<UserType> getUserDefinition() {
-		if (userDefinition == null) {
-			userDefinition = prismContext.getSchemaRegistry().findObjectDefinitionByCompileTimeClass(
-					UserType.class);
-		}
-		return userDefinition;
+		return prismContext.queryFor(UserType.class)
+					.item(property)
+						.startsWith(value)
+						.matching(matchingRule)
+					.build();
 	}
 	
 	private CustomUserType convertToCustomUserType(PrismObject<UserType> user) {
