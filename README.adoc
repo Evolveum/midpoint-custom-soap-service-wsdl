@@ -1,0 +1,71 @@
+= Midpoint custom SOAP WS overlay
+
+Example of a midPoint overlay project that implements a custom SOAP-based web service.
+
+The web service is implemented in the `midpoint-custom-service-server`.
+It is implemented by using JAX-WS contract-first development.
+WSDL file is part of the project and the server code is generated from that.
+
+The `midpoint-custom-service-overlay` is an overlay project that is using
+the web service client and integrates it with midPoint.
+
+There is also testing web service client in midpoint-custom-service-client.
+
+== Building and running
+
+Just use the simple `mvn clean package` in the top-level project.
+It will build the service, create the overlay and build the client.
+The final `midpoint.war` will be built in `midpoint-custom-service-overlay/target`.
+It can be run directly as executable JAR:
+----
+java -jar midpoint-custom-service-overlay/target/midpoint.war
+----
+
+Alternatively you may deploy the WAR to the Tomcat, but this option is no longer supported.
+The web service will be listening at: http://localhost:8080/midpoint/ws/example-1
+
+== Testing
+
+The testing client can be executed by running the following in the
+`midpoint-custom-service-client` directory:
+----
+mvn exec:java -Dexec.mainClass="com.example.midpoint.service.client.Main"
+----
+
+The client will search for a user with e-mail address jack@caribbean.com.
+
+See https://wiki.evolveum.com/display/midPoint/Customization+With+Overlay+Project
+for more details about midPoint overlay projects.
+
+You may also use `curl` like this (also try `-v` if `-si` is not enough):
+----
+curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/midpoint/ws/example-1 <<< '
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:exam="http://midpoint.example.com/xml/ns/example-1">
+    <soap:Header>
+        <wsse:Security
+                xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                soap:mustUnderstand="1">
+            <wsse:UsernameToken wsu:Id="UsernameToken-1">
+                <wsse:Username>administrator</wsse:Username>
+                <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">5ecr3t</wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+    </soap:Header>
+   <soap:Body>
+      <exam:searchUserByEmailRequest>
+         <exam:email>operator@example.com</exam:email>
+      </exam:searchUserByEmailRequest>
+   </soap:Body>
+</soap:Envelope>
+'
+----
+
+== TODO
+
+* Document Prism JAXB limitations / the need to use own model in WSDL.
+* Document missing audit, reasons for it (no real session, too many audits) and point to...?
+Mention `AuditService`?
+* Better task initialization in `ExampleWebService.createTaskInstance` - what does it mean?
+* Move security interceptors from MP.
+* Review test client and curl commands after adding security.
