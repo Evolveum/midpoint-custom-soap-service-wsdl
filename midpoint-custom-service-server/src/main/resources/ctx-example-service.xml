@@ -17,56 +17,44 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:jaxws="http://cxf.apache.org/jaxws"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:ssec="http://cxf.apache.org/spring-security"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-     http://www.springframework.org/schema/context
-     http://www.springframework.org/schema/context/spring-context-3.0.xsd
-     http://www.springframework.org/schema/util
-     http://www.springframework.org/schema/util/spring-util-3.0.xsd
-     http://cxf.apache.org/jaxws
-     http://cxf.apache.org/schemas/jaxws.xsd
-     http://cxf.apache.org/jaxrs
-     http://cxf.apache.org/schemas/jaxrs.xsd
-     http://cxf.apache.org/spring-security
-     http://cxf-spring-security.googlecode.com/svn/trunk/cxf-spring-security/src/main/resources/schemas/spring-security.xsd"
-       default-lazy-init="false"
-       default-autowire="byName">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:jaxws="http://cxf.apache.org/jaxws"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://cxf.apache.org/jaxws
+            http://cxf.apache.org/schemas/jaxws.xsd"
+        default-lazy-init="false">
 
     <context:annotation-config/>
     <context:component-scan base-package="com.example.midpoint.service.server"/>
     <context:spring-configured/>
-    
+
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
     <jaxws:endpoint id="exampleWS"
-                    address="/example-1"
-                    wsdlLocation="classpath:xml/ns/custom/example-1.wsdl"
-                    serviceName="ex:ExampleService"
-                    endpointName="ex:ExamplePort"
-                    xmlns:ex="http://midpoint.example.com/xml/ns/example-1">
+            address="/example-1"
+            wsdlLocation="classpath:xml/ns/custom/example-1.wsdl"
+            serviceName="ex:ExampleService"
+            endpointName="ex:ExamplePort"
+            xmlns:ex="http://midpoint.example.com/xml/ns/example-1">
+
         <jaxws:implementor>
             <bean parent="exampleWebService"/>
         </jaxws:implementor>
+
         <jaxws:inInterceptors>
             <ref bean="authenticationInterceptor"/>
             <ref bean="springAuthenticationInjector"/>
             <ref bean="springAuthenticationJanitor"/>
-
-            <!--
-                        <ref bean="authorizationInterceptor"/>
-            -->
         </jaxws:inInterceptors>
+
         <jaxws:outInterceptors>
 
         </jaxws:outInterceptors>
-
     </jaxws:endpoint>
 
 </beans>
