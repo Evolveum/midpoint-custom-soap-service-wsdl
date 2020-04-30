@@ -166,10 +166,6 @@
                                     <groupId>com.evolveum.midpoint.gui</groupId>
                                     <artifactId>admin-gui</artifactId>
                                 </exclude>
-                                <exclude>
-                                    <groupId>javax.annotation</groupId>
-                                    <artifactId>javax.annotation-api</artifactId>
-                                </exclude>
                             </excludes>
                         </configuration>
                     </execution>
