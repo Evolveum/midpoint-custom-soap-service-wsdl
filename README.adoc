@@ -54,12 +54,36 @@ curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/m
     </soap:Header>
    <soap:Body>
       <exam:searchUserByEmailRequest>
-         <exam:email>operator@example.com</exam:email>
+         <exam:email>jack@caribbean.com</exam:email>
       </exam:searchUserByEmailRequest>
    </soap:Body>
 </soap:Envelope>
 '
 ----
+
+== WS security notes
+
+TODO mention right examples from: https://github.com/Talend/tesb-rt-se/tree/master/examples/cxf
+
+=== Type attribute in Password element
+
+Attribute `Type` in `wsse:Password` element is required by Basic Security Profile (BSP) 1.1 rules.
+This can be relaxed if you add property into `jaxws:endpoint` setup in `cxf-example-service.xml`:
+
+[source,xml]
+----
+<jaxws:endpoint id="exampleWS" ...>
+...
+    <jaxws:properties>
+        <entry key="ws-security.is-bsp-compliant" value="false"/>
+    </jaxws:properties>
+----
+
+If this property is set, you can omit `Type` attribute from `Password` element.
+This also means you can't utilize `Type` in any decision related to password validation.
+*This property is set* in our example, so if BSP is desired it needs to be removed.
+
+=== Validator vs PasswordCallback
 
 == TODO
 

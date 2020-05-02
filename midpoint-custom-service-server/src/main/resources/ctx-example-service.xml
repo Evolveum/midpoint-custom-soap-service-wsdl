@@ -47,14 +47,40 @@
         </jaxws:implementor>
 
         <jaxws:inInterceptors>
-            <ref bean="authenticationInterceptor"/>
+            <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+                <constructor-arg>
+                    <map>
+                        <entry key="action" value="UsernameToken"/>
+                    </map>
+                </constructor-arg>
+            </bean>
+
+            <!-- Midpoint interceptors TODO move here-->
             <ref bean="springAuthenticationInjector"/>
             <ref bean="springAuthenticationJanitor"/>
         </jaxws:inInterceptors>
 
         <jaxws:outInterceptors>
-
+            <!-- none -->
         </jaxws:outInterceptors>
+
+        <jaxws:properties>
+            <entry key="ws-security.ut.validator">
+                <bean class="com.example.midpoint.service.infra.WsUserTokenValidator"/>
+            </entry>
+            <!-- with this property, Type attribute of Password element is not checked -->
+            <entry key="ws-security.is-bsp-compliant" value="false"/>
+        </jaxws:properties>
+
+        <!-- TODO moved from MP, explain
+        <jaxws:properties>
+            <entry key="org.apache.cxf.logging.FaultListener" value-ref="wsFaultListener"/>
+        </jaxws:properties>
+
+        <jaxws:features>
+            <ref bean="loggingFeature"/>
+        </jaxws:features>
+        -->
     </jaxws:endpoint>
 
 </beans>
