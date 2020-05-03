@@ -35,6 +35,9 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
+    <bean id="springAuthenticationJanitor" class="com.example.midpoint.service.infra.SpringAuthenticationJanitorInterceptor">
+    </bean>
+
     <jaxws:endpoint id="exampleWS"
             address="/example-1"
             wsdlLocation="classpath:xml/ns/custom/example-1.wsdl"
@@ -55,9 +58,10 @@
                 </constructor-arg>
             </bean>
 
-            <!-- Midpoint interceptors TODO move here-->
+            <!-- TODO replace this with the lower one, fix authorizations -->
             <ref bean="springAuthenticationInjector"/>
-            <ref bean="springAuthenticationJanitor"/>
+            <!--<bean class="com.example.midpoint.service.infra.SpringAuthenticationInjectorInterceptor"/>-->
+            <bean class="com.example.midpoint.service.infra.SpringAuthenticationJanitorInterceptor"/>
         </jaxws:inInterceptors>
 
         <jaxws:outInterceptors>
@@ -65,22 +69,24 @@
         </jaxws:outInterceptors>
 
         <jaxws:properties>
+            <!-- validates WS-Security user token -->
             <entry key="ws-security.ut.validator">
                 <bean class="com.example.midpoint.service.infra.WsUserTokenValidator"/>
             </entry>
+
             <!-- with this property, Type attribute of Password element is not checked -->
             <entry key="ws-security.is-bsp-compliant" value="false"/>
-        </jaxws:properties>
 
-        <!-- TODO moved from MP, explain
-        <jaxws:properties>
-            <entry key="org.apache.cxf.logging.FaultListener" value-ref="wsFaultListener"/>
+            <!-- -->
+            <entry key="org.apache.cxf.logging.FaultListener">
+                <bean class="com.example.midpoint.service.infra.WsFaultListener"/>
+            </entry>
         </jaxws:properties>
 
         <jaxws:features>
+            <!-- bean implemented in midPoint (for now) -->
             <ref bean="loggingFeature"/>
         </jaxws:features>
-        -->
     </jaxws:endpoint>
 
 </beans>
