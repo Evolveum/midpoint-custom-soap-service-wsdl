@@ -67,21 +67,15 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!--
-        We need to get rid of the wrong servlet-api version.
-        TODO: remove in 4.2, is fixed with proper servlet API dependency.
-        -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-annotations-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.evolveum.midpoint.model</groupId>
             <artifactId>model-api</artifactId>
             <version>${midpoint.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -145,15 +139,16 @@
                 <version>3.2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <!-- See also excludes for repackage lower for explanations. -->
+                    <packagingExcludes>
+                        WEB-INF/lib/admin-gui-*-classes.jar,WEB-INF/lib/javax.annotation-api-*.jar
+                    </packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
-                <configuration>
-                    <fork>true</fork>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -162,9 +157,15 @@
                         <configuration>
                             <layoutFactory implementation="com.evolveum.midpoint.tools.layout.MidPointWarLayoutFactory"/>
                             <excludes>
+                                <!-- GUI is not included as JAR but as classes, just like in original WAR. -->
                                 <exclude>
                                     <groupId>com.evolveum.midpoint.gui</groupId>
                                     <artifactId>admin-gui</artifactId>
+                                </exclude>
+                                <!-- Matches packagingExcludes above, replaced by tomcat-annotations-api. -->
+                                <exclude>
+                                    <groupId>javax.annotation</groupId>
+                                    <artifactId>javax.annotation-api</artifactId>
                                 </exclude>
                             </excludes>
                         </configuration>
