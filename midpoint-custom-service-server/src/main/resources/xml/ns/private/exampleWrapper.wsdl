@@ -18,17 +18,19 @@
 
 
 <definitions name="example"
-    targetNamespace="http://midpoint.example.com/xml/ns/example-1"
-    xmlns="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-    xmlns:tns="http://midpoint.example.com/xml/ns/example-1"
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-    <!-- WARNING! The CXF catalog resolver takes the content of "location" attribute and tries to use it as both systemId and publicId
-                  therefore it has to be set to a namespace for the catalog resolution to work -->
-    <import namespace="http://midpoint.example.com/xml/ns/example-1" 
-    		location="http://midpoint.example.com/xml/ns/example-1"/>
+        targetNamespace="http://midpoint.example.com/xml/ns/example-1"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:tns="http://midpoint.example.com/xml/ns/example-1"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+    <!--
+    WARNING! The CXF catalog resolver takes the content of "location" attribute
+    and tries to use it as both systemId and publicId therefore it has to be set
+    to a namespace for the catalog resolution to work.
+    -->
+    <import namespace="http://midpoint.example.com/xml/ns/example-1"
+            location="http://midpoint.example.com/xml/ns/example-1"/>
+
     <service name="ExampleService">
         <port name="ExamplePort" binding="tns:ExampleBinding">
             <soap:address location="http://localhost:${HttpDefaultPort}/exampleService/examplePort"/>

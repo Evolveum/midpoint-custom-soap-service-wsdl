@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Evolveum and contributors
+ * Copyright (c) 2010-2020 Evolveum and contributors
  *
  * This work is dual-licensed under the Apache License 2.0
  * and European Union Public License. See LICENSE file for details.
@@ -13,13 +13,12 @@ import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import com.evolveum.midpoint.model.api.AuthenticationEvaluator;
-import com.evolveum.midpoint.model.api.authentication.GuiProfiledPrincipal;
+import com.evolveum.midpoint.model.api.authentication.GuiProfiledPrincipalManager;
 import com.evolveum.midpoint.model.api.context.PasswordAuthenticationContext;
 import com.evolveum.midpoint.schema.constants.SchemaConstants;
 import com.evolveum.midpoint.security.api.ConnectionEnvironment;
@@ -27,10 +26,13 @@ import com.evolveum.midpoint.security.api.MidPointPrincipal;
 import com.evolveum.midpoint.util.exception.*;
 import com.evolveum.midpoint.util.logging.Trace;
 import com.evolveum.midpoint.util.logging.TraceManager;
-import com.evolveum.midpoint.xml.ns._public.common.common_3.*;
+import com.evolveum.midpoint.xml.ns._public.common.common_3.FocusType;
+import com.evolveum.midpoint.xml.ns._public.common.common_3.UserType;
 
 /**
  * Validator of user token - tries to authenticated with provided username and password.
+ * This validator takes care of authorization as well, it prepares MidPointPrincipal and
+ * sets it in the security context holder.
  */
 public class WsUserTokenValidator implements Validator {
 
@@ -39,6 +41,9 @@ public class WsUserTokenValidator implements Validator {
 
     @Autowired
     private AuthenticationEvaluator<PasswordAuthenticationContext> passwordAuthenticationEvaluator;
+
+    @Autowired
+    private GuiProfiledPrincipalManager principalManager;
 
     @Override
     public Credential validate(Credential credential, RequestData data) throws WSSecurityException {
@@ -57,14 +62,14 @@ public class WsUserTokenValidator implements Validator {
                 ConnectionEnvironment.create(SchemaConstants.CHANNEL_WEB_SERVICE_URI);
         try {
             FocusType user = passwordAuthenticationEvaluator.checkCredentials(connEnv, authCtx);
-            // TODO - cleanup: following lines were originally responsibility of SAIInterceptor, which I'd like to remove comletely
+            MidPointPrincipal principal = principalManager.getPrincipal(user.asPrismObject());
             SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(new MidPointPrincipal(user), null));
-
-            // TODO do we want to recordAuthenticationSuccess, how?
+                    new PreAuthenticatedAuthenticationToken(principal, null));
 
             return credential;
-        } catch (AccessDeniedException | AuthenticationException e) {
+        } catch (AccessDeniedException | AuthenticationException | ExpressionEvaluationException
+                | SchemaException | CommunicationException | ConfigurationException
+                | SecurityViolationException e) {
             LOGGER.error("Access/auth exception in validate - {}: {}",
                     e.getClass().getSimpleName(), e.getMessage());
             throw new WSSecurityException(WSSecurityException.ErrorCode.FAILURE, e.getMessage());

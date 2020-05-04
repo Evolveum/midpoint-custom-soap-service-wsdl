@@ -35,9 +35,6 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
 
-    <bean id="springAuthenticationJanitor" class="com.example.midpoint.service.infra.SpringAuthenticationJanitorInterceptor">
-    </bean>
-
     <jaxws:endpoint id="exampleWS"
             address="/example-1"
             wsdlLocation="classpath:xml/ns/custom/example-1.wsdl"
@@ -50,18 +47,25 @@
         </jaxws:implementor>
 
         <jaxws:inInterceptors>
+            <!-- Takes care of auth/auth using custom validator configured in properties lower. -->
             <bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
                 <constructor-arg>
                     <map>
+                        <!-- Security action is needed, otherwise you'll get fault: No security action was defined! -->
                         <entry key="action" value="UsernameToken"/>
                     </map>
                 </constructor-arg>
             </bean>
 
-            <!-- TODO replace this with the lower one, fix authorizations -->
-            <ref bean="springAuthenticationInjector"/>
-            <!--<bean class="com.example.midpoint.service.infra.SpringAuthenticationInjectorInterceptor"/>-->
-            <bean class="com.example.midpoint.service.infra.SpringAuthenticationJanitorInterceptor"/>
+            <!--
+            PRE_INVOKE: additional authorizations that are unnatural in UserToken Validator.
+            It's easier to work with SoapMessage to obtain things like operation, etc.
+            It's important to choose the right Phase to make the information available.
+            -->
+            <bean class="com.example.midpoint.service.infra.WsAuthorizationInterceptor"/>
+
+            <!-- POST_INVOKE: cleans up the security context after the WS method call. -->
+            <bean class="com.example.midpoint.service.infra.WsSecurityContextCleanupInterceptor"/>
         </jaxws:inInterceptors>
 
         <jaxws:outInterceptors>
@@ -69,7 +73,7 @@
         </jaxws:outInterceptors>
 
         <jaxws:properties>
-            <!-- validates WS-Security user token -->
+            <!-- Validates WS-Security user token. -->
             <entry key="ws-security.ut.validator">
                 <bean class="com.example.midpoint.service.infra.WsUserTokenValidator"/>
             </entry>
@@ -77,7 +81,6 @@
             <!-- with this property, Type attribute of Password element is not checked -->
             <entry key="ws-security.is-bsp-compliant" value="false"/>
 
-            <!-- -->
             <entry key="org.apache.cxf.logging.FaultListener">
                 <bean class="com.example.midpoint.service.infra.WsFaultListener"/>
             </entry>
@@ -88,5 +91,4 @@
             <ref bean="loggingFeature"/>
         </jaxws:features>
     </jaxws:endpoint>
-
 </beans>

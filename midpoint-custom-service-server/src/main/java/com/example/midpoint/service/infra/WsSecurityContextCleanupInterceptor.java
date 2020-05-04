@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Evolveum and contributors
+ * Copyright (c) 2010-2020 Evolveum and contributors
  *
  * This work is dual-licensed under the Apache License 2.0
  * and European Union Public License. See LICENSE file for details.
@@ -13,12 +13,12 @@ import org.apache.cxf.phase.Phase;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
- * Responsible to cleanup spring authentication object after we finished WS method call.
+ * Responsible for cleanup of Spring's security context after the WS method call.
  */
-public class SpringAuthenticationJanitorInterceptor extends AbstractPhaseInterceptor<SoapMessage> {
+public class WsSecurityContextCleanupInterceptor extends AbstractPhaseInterceptor<SoapMessage> {
 
-    public SpringAuthenticationJanitorInterceptor() {
-        super(SpringAuthenticationJanitorInterceptor.class.getName(), Phase.POST_INVOKE);
+    public WsSecurityContextCleanupInterceptor() {
+        super(WsSecurityContextCleanupInterceptor.class.getName(), Phase.POST_INVOKE);
     }
 
     @Override
