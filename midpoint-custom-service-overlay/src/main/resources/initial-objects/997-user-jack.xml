@@ -19,7 +19,7 @@
         xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3"
         oid="7653c3de-b34c-49fe-8bea-f1013e5131a6" version="1">
 
-    <name>jackp</name>
+    <name>jack</name>
 
     <assignment id="1">
         <targetRef oid="00000000-0000-0000-0000-000000000008" relation="org:default" type="c:RoleType">
@@ -35,13 +35,13 @@
     <credentials>
         <password>
             <value>
-                <clearValue>jackp</clearValue>
+                <clearValue>jack123</clearValue>
             </value>
         </password>
     </credentials>
 
-    <fullName>Jack Pirate</fullName>
+    <fullName>Jack Sparrow</fullName>
     <givenName>Jack</givenName>
-    <familyName>Pirate</familyName>
+    <familyName>Sparrow</familyName>
     <emailAddress>jack@caribbean.com</emailAddress>
 </user>
