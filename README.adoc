@@ -1,15 +1,36 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:toc:
+:toc-placement!:
+
 = Midpoint custom SOAP WS overlay
+
+toc::[]
 
 Example of a midPoint overlay project that implements a custom SOAP-based web service.
 
 The web service is implemented in the `midpoint-custom-service-server`.
 It is implemented by using JAX-WS contract-first development.
-WSDL file is part of the project and the server code is generated from that.
+WSDL file is part of the project and the service interface code is generated from that.
 
 The `midpoint-custom-service-overlay` is an overlay project that is using
 the web service client and integrates it with midPoint.
 
-There is also testing web service client in midpoint-custom-service-client.
+See also README from https://github.com/Evolveum/midpoint-overlay-example[the basic overlay example]
+and https://wiki.evolveum.com/display/midPoint/Customization+With+Overlay+Project[documentation page]
+for more details about midPoint overlay projects.
+
+[WARNING]
+This project is no attempt to demonstrate the best WS/CXF practices - it only shows CXF overlay.
+Some WS/WS-Security/CXF considerations are mentioned below, but we expect you know even better.
+
+This overlay includes custom initial objects to add two roles with the authorizations for WS access.
+It also includes user `jack` with email address used in testing later.
 
 == Building and running
 
@@ -24,18 +45,14 @@ java -jar midpoint-custom-service-overlay/target/midpoint.war
 Alternatively you may deploy the WAR to the Tomcat, but this option is no longer supported.
 The web service will be listening at: http://localhost:8080/midpoint/ws/example-1
 
+When running in an IDE be sure to add "provided" scope to the classpath in the run configuration.
+*If `midpoint.home` does not exist run as JAR first, not IDE, otherwise `initial-objects` loading fails.*
+
 == Testing
 
-The testing client can be executed by running the following in the
-`midpoint-custom-service-client` directory:
-----
-mvn exec:java -Dexec.mainClass="com.example.midpoint.service.client.Main"
-----
-
-The client will search for a user with e-mail address jack@caribbean.com.
-
-See https://wiki.evolveum.com/display/midPoint/Customization+With+Overlay+Project
-for more details about midPoint overlay projects.
+To test the service you may use SoapUI or similar software and point it to the
+http://localhost:8080/midpoint/ws/example-1?wsdl[example service WSDL].
+Try searching for user with email address `jack@caribbean.com`.
 
 You may also use `curl` like this (also try `-v` if `-si` is not enough):
 ----
@@ -61,9 +78,76 @@ curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/m
 '
 ----
 
-== WS security notes
+You may try the request as user `jack` (password `jack123`) or create new user and experiment with
+denied access - see section about authorizations lower.
 
-TODO mention right examples from: https://github.com/Talend/tesb-rt-se/tree/master/examples/cxf
+== Authorizations
+
+We mentioned that two roles with authorizations allowing access to the service are part of the overlay.
+You can check the `initial-objects` under `midpoint-custom-service-overlay/src/main/resources`.
+Role *Custom WS User* allows full WS access, *Custom WS User - SearchUserByEmail* allows only
+access to a single operation - as there is just this one operation it is merely for demo purposes.
+
+User `jack` has the second role assigned and can access the only operation provided.
+Authorizations are checked in `WsAuthorizationInterceptor`:
+
+* First check is for "all" authorization, which also lets in any user with `Superuser` role.
+* Second step checks authorization for the currently called operation.
+
+If these checks pass the call will get to the web-service method.
+It's up to the method implementation to assure that authorizations are not the last line of defence
+and that model API is used properly to ensure other authorizations are applied as expected.
+
+== Code-first approach
+
+It is possible and often convenient to use code-first approach and let CXF to generate the WSDL.
+This is perfectly valid approach but it's important to be aware of the limitations.
+*You should never use Prism objects in the web-service API.*
+The reason for this is that while Prism objects look like JAXB-annotated objects, they are not.
+Generation of WSDL will fail and the service will not function.
+
+It is best to keep web-service API separate and independent from midPoint and only glue it with
+midPoint in its implementation.
+Needless to say, only API/public modules from midPoint should be used.
+
+== Logging and auditing
+
+This overlay example has some minimal logging added for demonstration purposes.
+Most logging is on `INFO` level so logging does not need to be configured to see it.
+Any undesired case is logged as `ERROR` which should be fine-tuned in real-live implementation.
+Perhaps some cases should be just `WARN` without full exception logging, etc.
+This would require finer-grained catch clauses and/or some cause analysis in `WsFaultListener`.
+
+For the web-service call we don't recommend audit user login/logout, as that is more a notion
+for longer lasting session which doesn't match stateless web-service calls.
+You can use `AuditService.audit()` to add audit records as needed.
+
+Example uses channel constant `CHANNEL_WEB_SERVICE_URI` for `Task` and `ConnectionEnvironment`,
+but you may introduce your own channel constant.
+
+== WS-Security notes
+
+There are many options how to set up WS-Security and this overlay shows only a simple solution.
+Please check https://cxf.apache.org/docs/ws-security.html[CXF WS-Security documentation]
+and/or other example projects, e.g. https://github.com/Talend/tesb-rt-se/tree/master/examples/cxf[here].
+There were WS-Security changes in CXF around version 3.1, so be careful with online sources like StackOverflow.
+
+It is also possible to use headers or body of the message for authentication information.
+Or you can protect the WS with firewall, have no authorization information in the SOAP messages
+whatsoever and set predefined technical user in some interceptor.
+There are many scenarios and solutions and this overlay does not tackle these at all.
+
+=== Validator vs PasswordCallback
+
+The most important part of the overlay setup is usage of custom `Validator` for `UsernameToken`.
+By default CXF uses `UsernameTokenValidator` that expects us to implement `CallbackHandler` to fill
+`WSPasswordCallback` with password so that validator can compare it with the one in the message.
+This can't work if midPoint passwords are hashed and WS-Passwords are plaintext.
+It seemed better to implement `Validator` with custom `WsUsernameTokenValidator` that extracts
+the user name and password and tries to authenticate with it without reading stored user's password.
+
+This validator is much simpler than the original implementation and may not be suitable for other
+options how `UsernameToken` element can be used - this must be customized if needed.
 
 === Type attribute in Password element
 
@@ -81,15 +165,4 @@ This can be relaxed if you add property into `jaxws:endpoint` setup in `cxf-exam
 
 If this property is set, you can omit `Type` attribute from `Password` element.
 This also means you can't utilize `Type` in any decision related to password validation.
-*This property is set* in our example, so if BSP is desired it needs to be removed.
-
-=== Validator vs PasswordCallback
-
-== TODO
-
-* Document Prism JAXB limitations / the need to use own model in WSDL.
-* Document missing audit, reasons for it (no real session, too many audits) and point to...?
-Mention `AuditService`?
-* Better task initialization in `ExampleWebService.createTaskInstance` - what does it mean?
-* Move security interceptors from MP.
-* Review test client and curl commands after adding security.
+*This property is set* in our example and `Type` is just optional attribute.
