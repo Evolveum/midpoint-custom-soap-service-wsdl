@@ -15,6 +15,7 @@ import org.apache.cxf.phase.Phase;
 import org.apache.wss4j.common.ext.WSSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.evolveum.midpoint.schema.constants.SchemaConstants;
 import com.evolveum.midpoint.schema.result.OperationResult;
 import com.evolveum.midpoint.security.api.AuthorizationConstants;
 import com.evolveum.midpoint.security.enforcer.api.AuthorizationParameters;
@@ -31,10 +32,10 @@ import com.evolveum.midpoint.xml.ns._public.common.common_3.AuthorizationPhaseTy
  */
 public class WsAuthorizationInterceptor extends AbstractPhaseInterceptor<SoapMessage> {
 
-    private static final Trace LOGGER = TraceManager.getTrace(WsUserTokenValidator.class);
+    private static final Trace LOGGER = TraceManager.getTrace(WsUsernameTokenValidator.class);
 
     private static final String OPERATION_AUTHORIZATION =
-            WsUserTokenValidator.class.getName() + ".authorization";
+            WsUsernameTokenValidator.class.getName() + ".authorization";
 
     // custom WS authorization constants
     private static final String NS_AUTHORIZATION_WS =
@@ -56,6 +57,7 @@ public class WsAuthorizationInterceptor extends AbstractPhaseInterceptor<SoapMes
     public void handleMessage(SoapMessage message) throws Fault {
         try {
             Task task = taskManager.createTaskInstance(OPERATION_AUTHORIZATION);
+            task.setChannel(SchemaConstants.CHANNEL_WEB_SERVICE_URI);
             OperationResult result = task.getResult();
 
             // in our example granted by role: Custom WS User

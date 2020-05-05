@@ -30,14 +30,14 @@ import com.evolveum.midpoint.xml.ns._public.common.common_3.FocusType;
 import com.evolveum.midpoint.xml.ns._public.common.common_3.UserType;
 
 /**
- * Validator of user token - tries to authenticated with provided username and password.
- * This validator takes care of authorization as well, it prepares MidPointPrincipal and
- * sets it in the security context holder.
+ * Validator of UsernameToken - tries to authenticate with provided username and password.
+ * This validator prepares MidPointPrincipal and sets it in the security context holder.
+ * Authorizations are left for an interceptor as it is easier to figure out operation name there.
  */
-public class WsUserTokenValidator implements Validator {
+public class WsUsernameTokenValidator implements Validator {
 
     // logs on info level for demonstration purposes, adjust accordingly
-    private static final Trace LOGGER = TraceManager.getTrace(WsUserTokenValidator.class);
+    private static final Trace LOGGER = TraceManager.getTrace(WsUsernameTokenValidator.class);
 
     @Autowired
     private AuthenticationEvaluator<PasswordAuthenticationContext> passwordAuthenticationEvaluator;

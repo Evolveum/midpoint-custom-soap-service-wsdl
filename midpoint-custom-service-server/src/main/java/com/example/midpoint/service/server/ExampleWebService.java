@@ -55,32 +55,28 @@ public class ExampleWebService implements ExamplePortType {
     public SearchUserByEmailResponseType searchUserByEmail(SearchUserByEmailRequestType parameters)
             throws Fault {
         final String OPERATION_NAME = "searchUserByEmail";
-        LOGGER.trace("Received Example WS request {}({})", OPERATION_NAME, parameters);
+        LOGGER.info("Received Example WS request {}({})", OPERATION_NAME, parameters);
 
         String email = parameters.getEmail();
         Validate.notEmpty(email, "No email in person");
 
-        Task task = createTaskInstance(ExampleWebService.class.getName() + OPERATION_NAME);
+        Task task = createTaskInstance(OPERATION_NAME);
         OperationResult result = task.getResult();
 
-        SearchUserByEmailResponseType response;
         try {
             List<PrismObject<UserType>> users = findUsers(UserType.F_EMAIL_ADDRESS, email,
                     PrismConstants.STRING_IGNORE_CASE_MATCHING_RULE_NAME, task, result);
+            // task result check omitted
 
-            response = new SearchUserByEmailResponseType();
+            SearchUserByEmailResponseType response = new SearchUserByEmailResponseType();
             for (PrismObject<UserType> user : users) {
-                // if (user != null){
                 CustomUserType customUser = convertToCustomUserType(user);
                 response.getUser().add(customUser);
-                // response.setUid(user.getOid());
             }
-
+            return response;
         } catch (CommonException e) {
             throw handleFault(OPERATION_NAME, e);
         }
-
-        return response;
     }
 
     private <T> List<PrismObject<UserType>> findUsers(
@@ -139,9 +135,10 @@ public class ExampleWebService implements ExamplePortType {
         return new Fault(e.getMessage(), faultDetails, e);
     }
 
+    private static final String OP_NAME_PREFIX = ExampleWebService.class.getName() + '#';
+
     private Task createTaskInstance(String operationName) {
-        // TODO: better task initialization
-        Task task = taskManager.createTaskInstance(operationName);
+        Task task = taskManager.createTaskInstance(OP_NAME_PREFIX + operationName);
         setTaskOwner(task);
         task.setChannel(SchemaConstants.CHANNEL_WEB_SERVICE_URI);
         return task;

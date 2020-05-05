@@ -75,7 +75,7 @@
         <jaxws:properties>
             <!-- Validates WS-Security user token. -->
             <entry key="ws-security.ut.validator">
-                <bean class="com.example.midpoint.service.infra.WsUserTokenValidator"/>
+                <bean class="com.example.midpoint.service.infra.WsUsernameTokenValidator"/>
             </entry>
 
             <!-- with this property, Type attribute of Password element is not checked -->
