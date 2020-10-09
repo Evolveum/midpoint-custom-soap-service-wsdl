@@ -40,7 +40,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<midpoint.version>4.2-SNAPSHOT</midpoint.version>
-		<spring.boot.version>2.1.8.RELEASE</spring.boot.version>
+		<spring.boot.version>2.3.3.RELEASE</spring.boot.version>
 
 		<jaxb.version>2.3.0.1</jaxb.version>
 		<jaxb-xjc.version>2.3.0.1</jaxb-xjc.version>
