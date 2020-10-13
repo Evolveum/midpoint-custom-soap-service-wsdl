@@ -81,7 +81,8 @@ public class WsUsernameTokenValidator implements Validator {
                 | SecurityViolationException e) {
             LOGGER.error("Access/auth exception in validate - {}: {}",
                     e.getClass().getSimpleName(), e.getMessage());
-            throw new WSSecurityException(WSSecurityException.ErrorCode.FAILURE, e.getMessage());
+            throw new WSSecurityException(WSSecurityException.ErrorCode.FAILED_AUTHENTICATION,
+                    "generic.EmptyMessage", new Object[] { e.getMessage() });
         }
     }
 }
