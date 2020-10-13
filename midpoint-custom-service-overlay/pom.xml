@@ -77,6 +77,13 @@
             <artifactId>model-api</artifactId>
             <version>${midpoint.version}</version>
         </dependency>
+
+        <!-- SAAJ requires this, midPoint normally excludes this -->
+        <dependency>
+            <groupId>org.jvnet.staxex</groupId>
+            <artifactId>stax-ex</artifactId>
+            <version>${stax-ex.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
