@@ -43,21 +43,50 @@ java -jar midpoint-custom-service-overlay/target/midpoint.war
 ----
 
 Alternatively you may deploy the WAR to the Tomcat, but this option is no longer supported.
-The web service will be listening at: http://localhost:8080/midpoint/ws/example-1
+The web service will be listening at: http://localhost:8080/midpoint/soap/example-1
 
 To run in an IDE choose `com.evolveum.midpoint.web.boot.MidPointSpringApplication` as the main class.
 Be sure to add "provided" scope to the classpath in the run configuration.
-*If `midpoint.home` does not exist run as JAR first, not IDE, otherwise `initial-objects` loading fails.*
 
-== Testing
+[WARNING]
+If `midpoint.home` does not exist *run as JAR first*, not IDE, otherwise `initial-objects` loading fails.
+
+=== Required modification of security policy
+
+Because SOAP web service manages authentication separately we don't want midPoint's
+https://wiki.evolveum.com/display/midPoint/Flexible+Authentication[flexible authentication] to interfere.
+For this we need to modify default security policy in the midPoint after it first starts.
+Try the command from testing section below, it will try to redirect (HTTP 302) to `/midpoint` to authenticate.
+
+* Open the browser, go to http://localhost:8080/ and login with user `administrator` and password `5ecr3t`.
+* In the main menu on the left select *Repository objects* and then *All objects* below it.
+* On the *All objects* page change type of objects in the select box from *System configuration* to *Security policy*.
+* Open the only result *Default Security Policy* by clicking on it.
+* Edit the XML object by adding the following before the closing `</securityPolicy>` tag:
++
+----
+    <authentication>
+       <ignoredLocalPath>/soap/**</ignoredLocalPath>
+    </authentication>
+----
+* Save the object and restart the midPoint.
+
+This is a minimal change to the flexible authentication that does not replace the default setup, only alters it.
+The default authentication is however cached in the authentication filter and this minor change is not detected.
+(BTW, if authentication sequences were redefined such a change would be.)
+That's why restart is required and realistically it's a minor hassle so it's unlikely this will be fixed.
+
+See https://wiki.evolveum.com/display/midPoint/Flexible+Authentication+Configuration[Flexible Authentication Configuration] for more.
+
+=== Testing
 
 To test the service you may use SoapUI or similar software and point it to the
-http://localhost:8080/midpoint/ws/example-1?wsdl[example service WSDL].
+http://localhost:8080/midpoint/soap/example-1?wsdl[example service WSDL].
 Try searching for user with email address `jack@caribbean.com`.
 
 You may also use `curl` like this (also try `-v` if `-si` is not enough):
 ----
-curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/midpoint/ws/example-1 <<< '
+curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/midpoint/soap/example-1 <<< '
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:exam="http://midpoint.example.com/xml/ns/example-1">
     <soap:Header>
         <wsse:Security
@@ -79,8 +108,8 @@ curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/m
 '
 ----
 
-You may try the request as user `jack` (password `jack123`) or create new user and experiment with
-denied access - see section about authorizations lower.
+You may also try the request as user `jack` (password `jack123`) or create a new user
+and experiment with denied access - see the section about authorizations lower.
 
 == Authorizations
 
