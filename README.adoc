@@ -50,33 +50,7 @@ Be sure to add "provided" scope to the classpath in the run configuration.
 
 [WARNING]
 If `midpoint.home` does not exist *run as JAR first*, not IDE, otherwise `initial-objects` loading fails.
-
-=== Required modification of security policy
-
-Because SOAP web service manages authentication separately we don't want midPoint's
-https://wiki.evolveum.com/display/midPoint/Flexible+Authentication[flexible authentication] to interfere.
-For this we need to modify default security policy in the midPoint after it first starts.
-Try the command from testing section below, it will try to redirect (HTTP 302) to `/midpoint` to authenticate.
-
-* Open the browser, go to http://localhost:8080/ and login with user `administrator` and password `5ecr3t`.
-* In the main menu on the left select *Repository objects* and then *All objects* below it.
-* On the *All objects* page change type of objects in the select box from *System configuration* to *Security policy*.
-* Open the only result *Default Security Policy* by clicking on it.
-* Edit the XML object by adding the following before the closing `</securityPolicy>` tag:
-+
-----
-    <authentication>
-       <ignoredLocalPath>/soap/**</ignoredLocalPath>
-    </authentication>
-----
-* Save the object and restart the midPoint.
-
-This is a minimal change to the flexible authentication that does not replace the default setup, only alters it.
-The default authentication is however cached in the authentication filter and this minor change is not detected.
-(BTW, if authentication sequences were redefined such a change would be.)
-That's why restart is required and realistically it's a minor hassle so it's unlikely this will be fixed.
-
-See https://wiki.evolveum.com/display/midPoint/Flexible+Authentication+Configuration[Flexible Authentication Configuration] for more.
+If you made changes to the project, don't forget to `mvn clean package` it before running the JAR.
 
 === Testing
 
@@ -110,6 +84,46 @@ curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/m
 
 You may also try the request as user `jack` (password `jack123`) or create a new user
 and experiment with denied access - see the section about authorizations lower.
+
+== Security policy changes
+
+Before we talk about WS-Security there is one thing you should know.
+Because SOAP web service manages authentication separately we don't want midPoint's
+https://wiki.evolveum.com/display/midPoint/Flexible+Authentication[flexible authentication] to interfere.
+This project overrides default midPoint security policy object to bypass flexible authentication
+for requests under `/soap/` context.
+
+Our https://github.com/Evolveum/midpoint-overlay-example/blob/master/doc/overlay-development.adoc[midPoint Overlay development]
+guide describes initial objects import and also how to override built-in objects.
+
+=== Manual security policy change
+
+This is not necessary now, but if the security policy was not overridden the situation would be different.
+Trying the command from testing section above, it would try to redirect (HTTP 302) to `/midpoint` to authenticate.
+
+To manually change the default security policy:
+
+* Open the browser, go to http://localhost:8080/ and login with user `administrator` and password `5ecr3t`.
+* In the main menu on the left select *Repository objects* and then *All objects* below it.
+* On the *All objects* page change type of objects in the select box from *System configuration* to *Security policy*.
+* Open the only result *Default Security Policy* by clicking on it.
+* Edit the XML object by adding the following before the closing `</securityPolicy>` tag:
++
+----
+    <authentication>
+       <ignoredLocalPath>/soap/**</ignoredLocalPath>
+    </authentication>
+----
+* Save the object and restart the midPoint.
+
+This is a minimal change to the flexible authentication that does not replace the default setup, only alters it.
+The default authentication is however cached in the authentication filter and this minor change is not detected.
+(BTW, if authentication sequences were redefined such a change would be.)
+That's why restart is required and realistically it's a minor hassle so it's unlikely this will be fixed.
+
+See https://wiki.evolveum.com/display/midPoint/Flexible+Authentication+Configuration[Flexible Authentication Configuration] for more.
+
+Now with simple default object override this is all taken care of.
 
 == Authorizations
 
