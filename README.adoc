@@ -57,6 +57,7 @@ If you made changes to the project, don't forget to `mvn clean package` it befor
 To test the service you may use SoapUI or similar software and point it to the
 http://localhost:8080/midpoint/soap/example-1?wsdl[example service WSDL].
 Try searching for user with email address `jack@caribbean.com`.
+Complete list of services is available via browser on http://localhost:8080/midpoint/soap/.
 
 You may also use `curl` like this (also try `-v` if `-si` is not enough):
 ----
@@ -97,6 +98,12 @@ Our https://github.com/Evolveum/midpoint-overlay-example/blob/master/doc/overlay
 guide describes initial objects import and also how to override built-in objects.
 
 === Manual security policy change
+
+[NOTE]
+This section is also relevant if you ran the overlay with already existing midPoint home directory
+that does not have changed security policy.
+If, for whatever reasons, you don't want to delete midPoint home or specify different location
+you can still use the manual steps described below.
 
 This is not necessary now, but if the security policy was not overridden the situation would be different.
 Trying the command from testing section above, it would try to redirect (HTTP 302) to `/midpoint` to authenticate.
