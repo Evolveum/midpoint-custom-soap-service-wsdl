@@ -31,7 +31,6 @@ public class CxfConfig {
     public ServletRegistrationBean<CXFServlet> cxfServlet() {
         ServletRegistrationBean<CXFServlet> registration = new ServletRegistrationBean<>();
         registration.setServlet(new CXFServlet());
-        registration.addInitParameter("service-list-path", "midpointservices");
         registration.setLoadOnStartup(1);
         // Choose mapping that does NOT collide with other paths of midPoint (REST, UI).
         // CXF servlet takes over this mapping completely and anything it overshadows stops working.
