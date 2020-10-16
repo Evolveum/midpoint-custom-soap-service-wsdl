@@ -72,11 +72,6 @@
             <artifactId>tomcat-annotations-api</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.evolveum.midpoint.model</groupId>
-            <artifactId>model-api</artifactId>
-            <version>${midpoint.version}</version>
-        </dependency>
 
         <!-- SAAJ requires this, midPoint normally excludes this -->
         <dependency>
@@ -148,7 +143,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <!-- See also excludes for repackage lower for explanations. -->
                     <packagingExcludes>
-                        WEB-INF/lib/admin-gui-*-classes.jar,WEB-INF/lib/javax.annotation-api-*.jar
+                        WEB-INF/lib/admin-gui-*-classes.jar
                     </packagingExcludes>
                 </configuration>
             </plugin>
@@ -162,7 +157,6 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <layoutFactory implementation="com.evolveum.midpoint.tools.layout.MidPointWarLayoutFactory"/>
                             <excludes>
                                 <!-- GUI is not included as JAR but as classes, just like in original WAR. -->
                                 <exclude>
@@ -178,13 +172,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.evolveum.midpoint.tools</groupId>
-                        <artifactId>midpoint-war-layout</artifactId>
-                        <version>${midpoint.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
