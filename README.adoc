@@ -18,6 +18,11 @@ The web service is implemented in the `midpoint-custom-service-server`.
 It is implemented by using JAX-WS contract-first development.
 WSDL file is part of the project and the service interface code is generated from that.
 
+[NOTE]
+There is also https://github.com/Evolveum/midpoint-custom-soap-service[simple code-first SOAP example]
+using basic authentication via midPoint's built-in flexible authentication.
+You can combine the code-first style with WS-Security described in this overlay.
+
 The `midpoint-custom-service-overlay` is an overlay project that is using
 the web service client and integrates it with midPoint.
 
@@ -148,18 +153,6 @@ Authorizations are checked in `WsAuthorizationInterceptor`:
 If these checks pass the call will get to the web-service method.
 It's up to the method implementation to assure that authorizations are not the last line of defence
 and that model API is used properly to ensure other authorizations are applied as expected.
-
-== Code-first approach
-
-It is possible and often convenient to use code-first approach and let CXF to generate the WSDL.
-This is perfectly valid approach but it's important to be aware of the limitations.
-*You should never use Prism objects in the web-service API.*
-The reason for this is that while Prism objects look like JAXB-annotated objects, they are not.
-Generation of WSDL will fail and the service will not function.
-
-It is best to keep web-service API separate and independent from midPoint and only glue it with
-midPoint in its implementation.
-Needless to say, only API/public modules from midPoint should be used.
 
 == Logging and auditing
 
