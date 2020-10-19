@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (c) 2014-2020 Evolveum
+  ~ Copyright (C) 2014-2020 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<!-- It is better not tu use midpoint-parent, as it implies too much and complicates things. -->
+    <!-- It is better not tu use midpoint-parent, as it implies too much and complicates things. -->
 
-	<groupId>com.example</groupId>
-	<artifactId>midpoint-custom-service</artifactId>
-	<version>4.2-SNAPSHOT</version>
-	<packaging>pom</packaging>
+    <groupId>com.example</groupId>
+    <artifactId>midpoint-custom-service</artifactId>
+    <version>4.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<name>midPoint Custom Service</name>
-	<description>Example of a midPoint overlay project that implements a custom web service</description>
+    <name>midPoint Custom SOAP Service</name>
+    <description>Example of a midPoint overlay project that implements a custom SOAP web service, contract first.</description>
 
     <modules>
         <module>midpoint-custom-service-server</module>
@@ -35,40 +35,40 @@
     </modules>
 
     <properties>
-		<java.version>11</java.version>
-		<project.source.version>${java.version}</project.source.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <project.source.version>${java.version}</project.source.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<midpoint.version>4.2-SNAPSHOT</midpoint.version>
-		<spring.boot.version>2.3.3.RELEASE</spring.boot.version>
+        <midpoint.version>4.2-SNAPSHOT</midpoint.version>
+        <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
 
-		<jaxb.version>2.3.0.1</jaxb.version>
-		<jaxb-xjc.version>2.3.0.1</jaxb-xjc.version>
-		<cxf.version>3.3.1</cxf.version>
-		<cxf-xjc.version>3.3.0</cxf-xjc.version>
-		<stax-ex.version>1.8.3</stax-ex.version>
-	</properties>
+        <jaxb.version>2.3.0.1</jaxb.version>
+        <jaxb-xjc.version>2.3.0.1</jaxb-xjc.version>
+        <cxf.version>3.3.1</cxf.version>
+        <cxf-xjc.version>3.3.0</cxf-xjc.version>
+        <stax-ex.version>1.8.3</stax-ex.version>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<!-- Import dependency management from MidPoint -->
-				<groupId>com.evolveum.midpoint</groupId>
-				<artifactId>midpoint</artifactId>
-				<version>${midpoint.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<!-- Import dependency management from Spring Boot -->
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from MidPoint -->
+                <groupId>com.evolveum.midpoint</groupId>
+                <artifactId>midpoint</artifactId>
+                <version>${midpoint.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <repositories>
         <repository>
@@ -95,17 +95,17 @@
         </pluginRepository>
     </pluginRepositories>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<source>${project.source.version}</source>
-					<target>${project.source.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${project.source.version}</source>
+                    <target>${project.source.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

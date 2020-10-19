@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (c) 2014-2018 Evolveum
+  ~ Copyright (C) 2014-2020 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@
     <version>4.2-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>midPoint Custom Service Overlay</name>
-    <description>Example of a midPoint overlay project that implements a custom web service</description>
+    <name>midPoint Custom SOAP Service Overlay</name>
+    <description>Overlay module of the custom SOAP web service example</description>
 
     <dependencies>
         <!-- This dependency is basis for WAR overlay (it is plain WAR, not "bootified" yet). -->
