@@ -91,6 +91,10 @@ curl -si -d @- -H "Content-Type: text/xml;charset=UTF-8" http://localhost:8080/m
 You may also try the request as user `jack` (password `jack123`) or create a new user
 and experiment with denied access - see the section about authorizations lower.
 
+If the test returns `302` it typically indicates that the midPoint home is not initialized properly.
+Stop the `java` process, delete (or move) the default midPoint home directory and try again.
+See also the discussion lower.
+
 == Security policy changes
 
 Before we talk about WS-Security there is one thing you should know.
