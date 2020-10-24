@@ -22,11 +22,10 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>midpoint-custom-service</artifactId>
-        <version>4.2</version>
+        <version>4.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>midpoint-custom-service-overlay</artifactId>
-    <version>4.2</version>
     <packaging>war</packaging>
 
     <name>midPoint Custom SOAP Service Overlay</name>
