@@ -23,7 +23,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
-    <version>4.3-SNAPSHOT</version>
+    <version>4.3</version>
     <packaging>pom</packaging>
 
     <name>midPoint Custom SOAP Service</name>
@@ -35,7 +35,7 @@
     </modules>
 
     <properties>
-        <midpoint.version>4.3-SNAPSHOT</midpoint.version>
+        <midpoint.version>4.3</midpoint.version>
 
         <java.version>11</java.version>
         <project.source.version>${java.version}</project.source.version>

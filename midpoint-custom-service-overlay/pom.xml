@@ -22,7 +22,7 @@
     <parent>
         <groupId>com.example</groupId>
         <artifactId>midpoint-custom-service</artifactId>
-        <version>4.3-SNAPSHOT</version>
+        <version>4.3</version>
     </parent>
 
     <artifactId>midpoint-custom-service-overlay</artifactId>
