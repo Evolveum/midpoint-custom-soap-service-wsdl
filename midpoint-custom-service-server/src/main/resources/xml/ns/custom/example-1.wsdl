@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2014-2016 Evolveum
+  ~ Copyright (C) 2014-2021 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,111 +16,110 @@
   -->
 
 <definitions name="ExampleService"
-    targetNamespace="http://midpoint.example.com/xml/ns/example-1"
-    xmlns:tns="http://midpoint.example.com/xml/ns/example-1"
-    xmlns="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
-			
+        targetNamespace="http://midpoint.example.com/xml/ns/example-1"
+        xmlns:tns="http://midpoint.example.com/xml/ns/example-1"
+        xmlns="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+
     <types>
         <xsd:schema targetNamespace="http://midpoint.example.com/xml/ns/example-1" elementFormDefault="qualified">
-       
-       		<xsd:complexType name="SearchUserByEmailRequestType">
-       			<xsd:sequence>
-       				<xsd:element name="email" type="xsd:string"/>
-       			</xsd:sequence>
-       		</xsd:complexType>
-       		<xsd:element name="searchUserByEmailRequest" type="tns:SearchUserByEmailRequestType"/>
-       		
-       		<xsd:complexType name="SearchUserByEmailResponseType">
-       			<xsd:sequence>
-       				<xsd:element name="user" type="tns:CustomUserType" maxOccurs="unbounded"/>
-       			</xsd:sequence>
-       		</xsd:complexType>
-       		<xsd:element name="searchUserByEmailResponse" type="tns:SearchUserByEmailResponseType"/>
-       		
-       		<xsd:complexType name="CustomUserType">
-       			<xsd:sequence>
-       				<xsd:element name="username" type="xsd:string"/>
-       				<xsd:element name="fullname" type="xsd:string"/>
-       				<xsd:element name="email" type="xsd:string"/>
-       			</xsd:sequence>
-       		</xsd:complexType>
 
-       		
-       		<xsd:simpleType name="FaultCodeType">
-				<xsd:annotation>
-		            <xsd:appinfo>
-		                <jaxb:typesafeEnumClass/>
-		            </xsd:appinfo>
-		        </xsd:annotation>
-				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="Schema violation">
-						<xsd:annotation>
-		                    <xsd:appinfo>
-		                        <jaxb:typesafeEnumMember name="SCHEMA_VIOLATION"/>
-		                    </xsd:appinfo>
-		                </xsd:annotation>
-					</xsd:enumeration>
-					<xsd:enumeration value="Security violation">
-						<xsd:annotation>
-		                    <xsd:appinfo>
-		                        <jaxb:typesafeEnumMember name="SECURITY_VIOLATION"/>
-		                    </xsd:appinfo>
-		                </xsd:annotation>
-					</xsd:enumeration>
-					<xsd:enumeration value="Policy violation">
-						<xsd:annotation>
-		                    <xsd:appinfo>
-		                        <jaxb:typesafeEnumMember name="POLICY_VIOLATION"/>
-		                    </xsd:appinfo>
-		                </xsd:annotation>
-					</xsd:enumeration>
-					<xsd:enumeration value="Communication error">
-						<xsd:annotation>
-		                    <xsd:appinfo>
-		                        <jaxb:typesafeEnumMember name="COMMUNICATION_ERROR"/>
-		                    </xsd:appinfo>
-		                </xsd:annotation>
-					</xsd:enumeration>
-					<xsd:enumeration value="Internal error">
-						<xsd:annotation>
-		                    <xsd:appinfo>
-		                        <jaxb:typesafeEnumMember name="INTERNAL_ERROR"/>
-		                    </xsd:appinfo>
-		                </xsd:annotation>
-					</xsd:enumeration>
-				</xsd:restriction>
-			</xsd:simpleType>
-						
-    		<xsd:complexType name="FaultDetailsType">
-				<xsd:sequence>
-					<xsd:element name="Code" type="tns:FaultCodeType"/>
-					<xsd:element name="Detail" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-				</xsd:sequence>
-			</xsd:complexType>
-       		<xsd:element name="faultDetails" type="tns:FaultDetailsType"/>
-       
+            <xsd:complexType name="SearchUserByEmailRequestType">
+                <xsd:sequence>
+                    <xsd:element name="email" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="searchUserByEmailRequest" type="tns:SearchUserByEmailRequestType"/>
+
+            <xsd:complexType name="SearchUserByEmailResponseType">
+                <xsd:sequence>
+                    <xsd:element name="user" type="tns:CustomUserType" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="searchUserByEmailResponse" type="tns:SearchUserByEmailResponseType"/>
+
+            <xsd:complexType name="CustomUserType">
+                <xsd:sequence>
+                    <xsd:element name="username" type="xsd:string"/>
+                    <xsd:element name="fullname" type="xsd:string"/>
+                    <xsd:element name="email" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:simpleType name="FaultCodeType">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <jaxb:typesafeEnumClass/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="Schema violation">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <jaxb:typesafeEnumMember name="SCHEMA_VIOLATION"/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="Security violation">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <jaxb:typesafeEnumMember name="SECURITY_VIOLATION"/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="Policy violation">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <jaxb:typesafeEnumMember name="POLICY_VIOLATION"/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="Communication error">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <jaxb:typesafeEnumMember name="COMMUNICATION_ERROR"/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                    <xsd:enumeration value="Internal error">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <jaxb:typesafeEnumMember name="INTERNAL_ERROR"/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:enumeration>
+                </xsd:restriction>
+            </xsd:simpleType>
+
+            <xsd:complexType name="FaultDetailsType">
+                <xsd:sequence>
+                    <xsd:element name="Code" type="tns:FaultCodeType"/>
+                    <xsd:element name="Detail" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="faultDetails" type="tns:FaultDetailsType"/>
+
         </xsd:schema>
     </types>
 
     <message name="SearchUserByEmailRequest">
-        <part name="parameters" element="tns:searchUserByEmailRequest" />
+        <part name="parameters" element="tns:searchUserByEmailRequest"/>
     </message>
     <message name="SearchUserByEmailResponse">
-        <part name="parameters" element="tns:searchUserByEmailResponse" />
+        <part name="parameters" element="tns:searchUserByEmailResponse"/>
     </message>
-    
-    <wsdl:message name="Fault">
-		<wsdl:part name="parameters" element="tns:faultDetails"/>
-	</wsdl:message>
 
-    <portType name="ExamplePortType">        
+    <wsdl:message name="Fault">
+        <wsdl:part name="parameters" element="tns:faultDetails"/>
+    </wsdl:message>
+
+    <portType name="ExamplePortType">
         <operation name="SearchUserByEmail">
             <documentation>
-                    Operation is searching for an user according to provided e-mail address.
+                Operation is searching for an user according to provided e-mail address.
             </documentation>
             <input name="SearchUserByEmailRequest" message="tns:SearchUserByEmailRequest"/>
             <output name="SearchUserByEmailResponse" message="tns:SearchUserByEmailResponse"/>
@@ -133,10 +132,10 @@
         <operation name="SearchUserByEmail">
             <soap:operation/>
             <input name="SearchUserByEmailRequest">
-                <soap:body use="literal" />
+                <soap:body use="literal"/>
             </input>
             <output name="SearchUserByEmailResponse">
-                <soap:body use="literal" />
+                <soap:body use="literal"/>
             </output>
             <fault name="fault">
                 <soap:fault name="fault" use="literal"/>
@@ -145,8 +144,7 @@
     </binding>
 
     <service name="ExampleService">
-        <port name="ExamplePort"
-                   binding="tns:ExampleBinding">
+        <port name="ExamplePort" binding="tns:ExampleBinding">
             <soap:address location="http://localhost:8080/dummy"/>
         </port>
     </service>
