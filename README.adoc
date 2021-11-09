@@ -13,6 +13,8 @@ endif::[]
 toc::[]
 
 Example of a midPoint overlay project that implements a custom SOAP-based web service.
+Head of the master normally follows the current development version of midPoint.
+See https://github.com/Evolveum/midpoint-custom-soap-service-wsdl/tree/v4.3[tag v4.3] for the last stable version.
 
 The web service is implemented in the `midpoint-custom-service-server`.
 It is implemented by using JAX-WS contract-first development.
@@ -52,10 +54,6 @@ The web service will be listening at: http://localhost:8080/midpoint/soap/exampl
 
 To run in an IDE choose `com.evolveum.midpoint.web.boot.MidPointSpringApplication` as the main class.
 Be sure to add "provided" scope to the classpath in the run configuration.
-
-[WARNING]
-If `midpoint.home` does not exist *run as JAR first*, not IDE, otherwise `initial-objects` loading fails.
-If you made changes to the project, don't forget to `mvn clean package` it before running the JAR.
 
 === Testing
 

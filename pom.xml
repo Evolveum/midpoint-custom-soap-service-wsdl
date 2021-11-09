@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (C) 2014-2020 Evolveum
+  ~ Copyright (C) 2014-2021 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- It is better not tu use midpoint-parent, as it implies too much and complicates things. -->
+    <!-- It is better not to use midpoint-parent, as it implies too much and complicates things. -->
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
@@ -41,12 +41,10 @@
         <project.source.version>${java.version}</project.source.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
+        <spring.boot.version>2.5.2</spring.boot.version>
 
-        <jaxb.version>2.3.0.1</jaxb.version>
-        <jaxb-xjc.version>2.3.0.1</jaxb-xjc.version>
-        <cxf.version>3.3.1</cxf.version>
-        <cxf-xjc.version>3.3.0</cxf-xjc.version>
+        <cxf.version>3.4.2</cxf.version>
+        <cxf-xjc.version>3.3.1</cxf-xjc.version>
         <stax-ex.version>1.8.3</stax-ex.version>
     </properties>
 
@@ -81,6 +79,15 @@
             <id>evolveum-snapshots</id>
             <name>Evolveum Snapshots</name>
             <url>http://nexus.evolveum.com/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <!--
+        We need this for Opensaml, version 4.1.0+ is not in Maven central repository.
+        So we need Shibboleth's repo too.
+        -->
+        <repository>
+            <id>shibboleth</id>
+            <name>Shibboleth Repository</name>
+            <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
     <pluginRepositories>
