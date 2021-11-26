@@ -14,7 +14,7 @@ toc::[]
 
 Example of a midPoint overlay project that implements a custom SOAP-based web service.
 Head of the master normally follows the current development version of midPoint.
-See https://github.com/Evolveum/midpoint-custom-soap-service-wsdl/tree/v4.3[tag v4.3] for the last stable version.
+See https://github.com/Evolveum/midpoint-custom-soap-service-wsdl/tree/v4.4[tag v4.4] for the last stable version.
 
 The web service is implemented in the `midpoint-custom-service-server`.
 It is implemented by using JAX-WS contract-first development.
