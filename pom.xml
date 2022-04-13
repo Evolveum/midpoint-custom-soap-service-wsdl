@@ -23,7 +23,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
-    <version>4.5</version>
+    <version>4.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>midPoint Custom SOAP Service</name>
