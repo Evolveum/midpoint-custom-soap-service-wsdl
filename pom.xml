@@ -43,7 +43,7 @@
 
         <spring.boot.version>2.5.2</spring.boot.version>
 
-        <cxf.version>3.4.2</cxf.version>
+        <cxf.version>3.5.2</cxf.version>
         <cxf-xjc.version>3.3.1</cxf-xjc.version>
         <stax-ex.version>1.8.3</stax-ex.version>
     </properties>
