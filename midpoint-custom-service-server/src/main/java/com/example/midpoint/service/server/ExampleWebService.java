@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2020 Evolveum
+ * Copyright (C) 2014-2022 Evolveum
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import com.example.midpoint.xml.ns.example_1.*;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

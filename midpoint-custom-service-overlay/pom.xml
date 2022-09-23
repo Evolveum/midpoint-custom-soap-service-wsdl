@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (C) 2014-2021 Evolveum
+  ~ Copyright (C) 2014-2022 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -26,99 +26,60 @@
     </parent>
 
     <artifactId>midpoint-custom-service-overlay</artifactId>
-    <packaging>war</packaging>
 
     <name>midPoint Custom SOAP Service Overlay</name>
     <description>Overlay module of the custom SOAP web service example</description>
 
     <dependencies>
-        <!-- This dependency is basis for WAR overlay (it is plain WAR, not "bootified" yet). -->
         <dependency>
             <groupId>com.evolveum.midpoint.gui</groupId>
             <artifactId>admin-gui</artifactId>
             <version>${midpoint.version}</version>
-            <type>war</type>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- This brings the right dependencies with proper excludes from gui-admin. -->
-        <dependency>
-            <groupId>com.evolveum.midpoint.gui</groupId>
-            <artifactId>admin-gui</artifactId>
-            <version>${midpoint.version}</version>
-            <type>jar</type>
-            <classifier>classes</classifier>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>midpoint-custom-service-server</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
         </dependency>
 
         <!--
-        Necessary, otherwise some JARs are missing in lib-provided.
-        Unclear why this is not brought by admin-gui:jar.
+        SAAJ requires this, midPoint normally excludes this.
+        Overlay starts without it, but fails to properly respond to SOAP requests.
         -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat</groupId>
-                    <artifactId>tomcat-annotations-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.annotation</groupId>
-            <artifactId>jakarta.annotation-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- SAAJ requires this, midPoint normally excludes this -->
         <dependency>
             <groupId>org.jvnet.staxex</groupId>
             <artifactId>stax-ex</artifactId>
             <version>${stax-ex.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <!-- Base name for JAR file. -->
         <finalName>midpoint</finalName>
         <resources>
+            <!--
+            By default, we want everything unfiltered, e.g. additional object XML and app-config YAML.
+            -->
             <resource>
                 <filtering>false</filtering>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/org.identityconnectors.common.logging</exclude>
-                </excludes>
             </resource>
-            <!-- LOCALIZATION -->
+            <!-- We want the following stuff filtered (properties replaced by Maven during build).
+            But there is no banner.txt in this example, so we can skip this.
             <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>localization/Midpoint*.properties</include>
                     <include>banner.txt</include>
                 </includes>
             </resource>
-            <!--  ICF LOGGING CONFIGURATION -->
-            <resource>
-                <targetPath>../midpoint/META-INF/services</targetPath>
-                <filtering>false</filtering>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/org.identityconnectors.common.logging</include>
-                </includes>
-            </resource>
+            -->
+            <!--
+            This "compiles" HTML files (or any other non-java/properties) to the classpath as well.
+            This is Wicket specific, where HTML templates are typically right next to the Java files.
+            There is no Wicket/GUI stuff in this overlay example, so we can skip it.
             <resource>
                 <filtering>false</filtering>
                 <directory>src/main/java</directory>
@@ -127,59 +88,45 @@
                     <exclude>**/*.properties</exclude>
                 </excludes>
             </resource>
-            <resource>
-                <filtering>true</filtering>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
+            -->
         </resources>
         <plugins>
+            <!--
+            Initializes ${git.branch} - can be skipped if it's not used in overlay banner.
+            About in midPoint will still use the right information from metadata inside system-init.jar.
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <verbose>false</verbose>
+                    <offline>true</offline>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.3</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <!-- See also excludes for repackage lower for explanations. -->
-                    <packagingExcludes>
-                        WEB-INF/lib/admin-gui-*-classes.jar
-                    </packagingExcludes>
-                </configuration>
-            </plugin>
+            -->
+            <!--
+            gitdescribe-maven-plugin that initializes ${git.describe} works automatically because of the parent POM.
+            -->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>com.evolveum.midpoint.web.boot.MidPointSpringApplication</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <layoutFactory implementation="com.evolveum.midpoint.tools.layout.MidPointWarLayoutFactory"/>
-                            <excludes>
-                                <!-- GUI is not included as JAR but as classes, just like in original WAR. -->
-                                <exclude>
-                                    <groupId>com.evolveum.midpoint.gui</groupId>
-                                    <artifactId>admin-gui</artifactId>
-                                </exclude>
-                                <!-- Matches packagingExcludes above, replaced by tomcat-annotations-api. -->
-                                <exclude>
-                                    <groupId>javax.annotation</groupId>
-                                    <artifactId>javax.annotation-api</artifactId>
-                                </exclude>
-                            </excludes>
+                            <layoutFactory implementation="com.evolveum.midpoint.launcher.MidPointJarLayoutFactory"/>
                         </configuration>
                     </execution>
                 </executions>

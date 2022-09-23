@@ -43,13 +43,12 @@ It also includes user `jack` with email address used in testing later.
 
 Just use the simple `mvn clean package` in the top-level project.
 It will build the service, create the overlay and build the client.
-The final `midpoint.war` will be built in `midpoint-custom-service-overlay/target`.
+The final `midpoint.jar` will be built in `midpoint-custom-service-overlay/target`.
 It can be run directly as executable JAR:
 ----
-java -jar midpoint-custom-service-overlay/target/midpoint.war
+java -jar midpoint-custom-service-overlay/target/midpoint.jar
 ----
 
-Alternatively you may deploy the WAR to the Tomcat, but this option is no longer supported.
 The web service will be listening at: http://localhost:8080/midpoint/soap/example-1
 
 To run in an IDE choose `com.evolveum.midpoint.web.boot.MidPointSpringApplication` as the main class.

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (C) 2014-2021 Evolveum
+  ~ Copyright (C) 2014-2022 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,7 +19,11 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- It is better not to use midpoint-parent, as it implies too much and complicates things. -->
+    <parent>
+        <artifactId>midpoint</artifactId>
+        <groupId>com.evolveum.midpoint</groupId>
+        <version>4.6-SNAPSHOT</version>
+    </parent>
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
@@ -37,34 +41,25 @@
     <properties>
         <midpoint.version>${project.version}</midpoint.version>
 
-        <java.version>11</java.version>
-        <project.source.version>${java.version}</project.source.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <spring.boot.version>2.5.2</spring.boot.version>
-
-        <cxf.version>3.5.2</cxf.version>
+        <cxf.version>3.5.3</cxf.version>
         <cxf-xjc.version>3.3.1</cxf-xjc.version>
         <stax-ex.version>1.8.3</stax-ex.version>
+
+        <!-- Checkstyle file is not available in overlay, let's just disable it. -->
+        <checkstyle.skip>true</checkstyle.skip>
+        <!--<mdep.analyze.skip>true</mdep.analyze.skip>-->
+
+        <!-- No tests here, but midPoint parent would try to run some, we need to disable it. -->
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- To ensure dependency convergence for transitive dependencies: -->
             <dependency>
-                <!-- Import dependency management from MidPoint -->
-                <groupId>com.evolveum.midpoint</groupId>
-                <artifactId>midpoint</artifactId>
-                <version>${midpoint.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>org.apache.neethi</groupId>
+                <artifactId>neethi</artifactId>
+                <version>3.2.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -73,47 +68,25 @@
         <repository>
             <id>evolveum</id>
             <name>Evolveum Public Releases</name>
-            <url>http://nexus.evolveum.com/nexus/content/groups/public</url>
+            <url>https://nexus.evolveum.com/nexus/content/groups/public</url>
         </repository>
         <repository>
             <id>evolveum-snapshots</id>
             <name>Evolveum Snapshots</name>
-            <url>http://nexus.evolveum.com/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <!--
-        We need this for Opensaml, version 4.1.0+ is not in Maven central repository.
-        So we need Shibboleth's repo too.
-        -->
-        <repository>
-            <id>shibboleth</id>
-            <name>Shibboleth Repository</name>
-            <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
+            <url>https://nexus.evolveum.com/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>evolveum</id>
             <name>Evolveum Public Releases</name>
-            <url>http://nexus.evolveum.com/nexus/content/groups/public</url>
+            <url>https://nexus.evolveum.com/nexus/content/groups/public</url>
         </pluginRepository>
         <pluginRepository>
             <id>evolveum-snapshots</id>
             <name>Evolveum Snapshots</name>
-            <url>http://nexus.evolveum.com/nexus/content/repositories/snapshots/</url>
+            <url>https://nexus.evolveum.com/nexus/content/repositories/snapshots/</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>${project.source.version}</source>
-                    <target>${project.source.version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

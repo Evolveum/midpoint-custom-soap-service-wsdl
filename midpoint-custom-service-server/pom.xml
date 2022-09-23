@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (C) 2014-2021 Evolveum
+  ~ Copyright (C) 2014-2022 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@
                         <groupId>org.glassfish.jaxb</groupId>
                         <artifactId>jaxb-xjc</artifactId>
                         <!-- Version from https://docs.spring.io/spring-boot/docs/2.5.2/reference/html/dependency-versions.html -->
-                        <version>2.3.4</version>
+                        <version>2.3.6</version>
                     </dependency>
                 </dependencies>
             </plugin>
