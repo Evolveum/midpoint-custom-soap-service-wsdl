@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  ~ Copyright (C) 2014-2022 Evolveum
+  ~ Copyright (C) 2014-2023 Evolveum
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@
     <parent>
         <artifactId>midpoint</artifactId>
         <groupId>com.evolveum.midpoint</groupId>
-        <version>4.7-SNAPSHOT</version>
+        <version>4.7</version>
     </parent>
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
-    <version>4.7-SNAPSHOT</version>
+    <version>4.7</version>
     <packaging>pom</packaging>
 
     <name>midPoint Custom SOAP Service</name>
