@@ -15,6 +15,9 @@
  */
 package com.example.midpoint.service.infra;
 
+import com.evolveum.midpoint.authentication.api.evaluator.AuthenticationEvaluator;
+import com.evolveum.midpoint.authentication.api.evaluator.context.PasswordAuthenticationContext;
+
 import org.apache.wss4j.common.ext.WSSecurityException;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.message.token.UsernameToken;
@@ -22,20 +25,17 @@ import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-import com.evolveum.midpoint.authentication.api.config.AuthenticationEvaluator;
 import com.evolveum.midpoint.model.api.authentication.GuiProfiledPrincipalManager;
-import com.evolveum.midpoint.model.api.context.PasswordAuthenticationContext;
 import com.evolveum.midpoint.schema.constants.SchemaConstants;
 import com.evolveum.midpoint.security.api.ConnectionEnvironment;
 import com.evolveum.midpoint.security.api.MidPointPrincipal;
-import com.evolveum.midpoint.util.exception.*;
 import com.evolveum.midpoint.util.logging.Trace;
 import com.evolveum.midpoint.util.logging.TraceManager;
-import com.evolveum.midpoint.xml.ns._public.common.common_3.FocusType;
 import com.evolveum.midpoint.xml.ns._public.common.common_3.UserType;
 
 /**
@@ -49,7 +49,7 @@ public class WsUsernameTokenValidator implements Validator {
     private static final Trace LOGGER = TraceManager.getTrace(WsUsernameTokenValidator.class);
 
     @Autowired
-    private AuthenticationEvaluator<PasswordAuthenticationContext> passwordAuthenticationEvaluator;
+    private AuthenticationEvaluator<PasswordAuthenticationContext, UsernamePasswordAuthenticationToken> passwordAuthenticationEvaluator;
 
     @Autowired
     private GuiProfiledPrincipalManager principalManager;
@@ -70,15 +70,13 @@ public class WsUsernameTokenValidator implements Validator {
         ConnectionEnvironment connEnv =
                 ConnectionEnvironment.create(SchemaConstants.CHANNEL_WEB_SERVICE_URI);
         try {
-            FocusType user = passwordAuthenticationEvaluator.checkCredentials(connEnv, authCtx);
-            MidPointPrincipal principal = principalManager.getPrincipal(user.asPrismObject());
+            UsernamePasswordAuthenticationToken token = passwordAuthenticationEvaluator.authenticate(connEnv, authCtx);
+            MidPointPrincipal principal = (MidPointPrincipal) token.getPrincipal();
             SecurityContextHolder.getContext().setAuthentication(
                     new PreAuthenticatedAuthenticationToken(principal, null));
 
             return credential;
-        } catch (AccessDeniedException | AuthenticationException | ExpressionEvaluationException
-                | SchemaException | CommunicationException | ConfigurationException
-                | SecurityViolationException e) {
+        } catch (AccessDeniedException | AuthenticationException e) {
             LOGGER.error("Access/auth exception in validate - {}: {}",
                     e.getClass().getSimpleName(), e.getMessage());
             throw new WSSecurityException(WSSecurityException.ErrorCode.FAILED_AUTHENTICATION,
