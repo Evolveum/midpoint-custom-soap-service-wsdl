@@ -71,7 +71,7 @@ public class WsAuthorizationInterceptor extends AbstractPhaseInterceptor<SoapMes
 
             // in our example granted by role: Custom WS User
             if (securityEnforcer.isAuthorized(AUTZ_ALL_URL, AuthorizationPhaseType.REQUEST,
-                    AuthorizationParameters.EMPTY, null, task, result)) {
+                    AuthorizationParameters.EMPTY, SecurityEnforcer.Options.create(), task, result)) {
                 return;
             }
 
@@ -79,7 +79,7 @@ public class WsAuthorizationInterceptor extends AbstractPhaseInterceptor<SoapMes
             QName operationName = message.getExchange().getBindingOperationInfo().getName();
             String action = authorizationUrl(operationName.getLocalPart());
             if (securityEnforcer.isAuthorized(action, AuthorizationPhaseType.REQUEST,
-                    AuthorizationParameters.EMPTY, null, task, result)) {
+                    AuthorizationParameters.EMPTY, SecurityEnforcer.Options.create(), task, result)) {
                 return;
             }
 

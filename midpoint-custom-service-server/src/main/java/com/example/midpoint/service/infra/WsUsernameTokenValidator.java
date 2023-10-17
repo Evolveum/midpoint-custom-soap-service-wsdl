@@ -69,6 +69,8 @@ public class WsUsernameTokenValidator implements Validator {
 
         ConnectionEnvironment connEnv =
                 ConnectionEnvironment.create(SchemaConstants.CHANNEL_WEB_SERVICE_URI);
+        connEnv.setModuleIdentifier("wsValidator");
+        connEnv.setSequenceIdentifier("wsCustomSequence");
         try {
             UsernamePasswordAuthenticationToken token = passwordAuthenticationEvaluator.authenticate(connEnv, authCtx);
             MidPointPrincipal principal = (MidPointPrincipal) token.getPrincipal();
