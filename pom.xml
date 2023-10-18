@@ -22,12 +22,12 @@
     <parent>
         <artifactId>midpoint</artifactId>
         <groupId>com.evolveum.midpoint</groupId>
-        <version>4.8-SNAPSHOT</version>
+        <version>4.8</version>
     </parent>
 
     <groupId>com.example</groupId>
     <artifactId>midpoint-custom-service</artifactId>
-    <version>4.8-SNAPSHOT</version>
+    <version>4.8</version>
     <packaging>pom</packaging>
 
     <name>midPoint Custom SOAP Service</name>
